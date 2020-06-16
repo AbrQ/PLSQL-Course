@@ -47,14 +47,14 @@ END;
 
 /*
 2.- Calcular la potencia de un numero cualquiera e imprimir el resultado: Ejemplo 2^4 = 16
-*/
+
 
 DECLARE
 
-v_base number := 2;
-v_potencia number := 4;
+v_base number := 3;
+v_potencia number := 3;
 v_calculo number := 1;
-v_contador number := 1;
+v_contador number := 0;
 
 BEGIN
 
@@ -73,3 +73,5 @@ WHILE v_contador <= v_potencia LOOP
 END LOOP;
 
 END;
+
+*/
