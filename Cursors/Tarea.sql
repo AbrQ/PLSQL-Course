@@ -26,35 +26,58 @@ END;
 
 2.- Obtener e imprimir todas las opiniones de un usuario (enviar id de usuario por parámetro al cursor), 
 imprimiendo primero el nombre de la película en mayúsculas y luego la opinión.
+
+declare
+ 
+cursor cur_opiniones(p_id_usuario number) is
+select o.opinion, p.titulo
+from opinion o
+inner join pelicula p on o.idpelicula = p.idpelicula
+where o.idusuario = p_id_usuario;
+ 
+begin
+ 
+    for op in cur_opiniones(1) loop
+        
+        dbms_output.put_line(upper(op.titulo));
+        dbms_output.put_line(op.opinion);
+    
+    end loop;
+ 
+end;
+
+3.- Cambiar todos los textos de opiniones para la película con ID 4. Modificar concatenando el nombre del usuario delante del texto. 
+Ej: "Juan: Aquí iría la opinión del usuario". Imprimir cuantas filas fueron afectadas utilizando cursor implícito.
+
+declare
+ 
+cursor cur_opiniones(p_id_pelicula number) is
+select o.*, u.apodo
+from opinion o
+inner join usuario u on o.idusuario = u.idusuario
+where o.idpelicula = p_id_pelicula;
+ 
+v_afectadas number;
+v_nueva_opinion varchar(140);
+ 
+begin
+ 
+    for op in cur_opiniones(4) loop
+        
+      v_nueva_opinion:= op.apodo||': '||op.opinion;
+      
+      update opinion set opinion = v_nueva_opinion
+      where idopinion = op.idopinion;
+      
+      v_afectadas:= sql%rowcount;
+      
+      dbms_output.put_line('Afectadas: '||v_Afectadas);
+    
+    end loop;
+ 
+end;
 */
 
-DECLARE
-
-v_titulo pelicula.titulo%TYPE;
-v_id_pelicula pelicula.idpelicula%TYPE;
-v_opinion opinion.opinion%TYPE;
 
 
-
-CURSOR opiniones(p_usuario) IS
-SELECT o.opinion
-FROM opinion o
-WHERE o.idpelicula = v_id_pelicula;
-
-p_usuario opinion.idusuario%TYPE;
-
-BEGIN
-
-SELECT upper(p.titulo)
-INTO v_titulo
-FROM pelicula p
-WHERE p.idpelicula = &v_id_pelicula;
-
-FOR reg IN opiniones(&p_usuario) LOOP
-    dbms_output.put_line('Titulo: '||v_titulo||' Opinion_: '||reg.opinion);
-END LOOP;
-
-
-
-END;
 
